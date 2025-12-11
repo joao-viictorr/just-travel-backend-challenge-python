@@ -42,7 +42,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'drf_spectacular',
+    'accounts',
+    'projects',
+    'pricing',
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,6 +82,15 @@ TEMPLATES = [
         },
     },
 ]
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Just Travel API",
+    "DESCRIPTION": "API para o desafio técnico",
+    "VERSION": "1.0.0",
+}
+
+
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
