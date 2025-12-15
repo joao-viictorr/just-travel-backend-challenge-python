@@ -4,7 +4,7 @@ from .models import Pricing
 class PricingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pricing
-        fields = ["id", "plant_name", "description", "price"]
+        fields = ["id", "plan_name", "description", "price"]
 
 
 class PricingSelectSerializer(serializers.Serializer):
