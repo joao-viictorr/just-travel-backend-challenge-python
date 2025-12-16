@@ -3,15 +3,51 @@ from .models import Pricing
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiResponse
+
 from .serializers import PricingSerializer
 from .serializers import PricingSelectSerializer
 
+@extend_schema(
+    summary="Listar planos disponíveis",
+    description="Retorna os planos disponíveis para seleção.",
+    tags=["Pricing"],
+    responses={
+        200: OpenApiResponse(
+            response=PricingSerializer,
+            description="Operação realizada com sucesso"
+        ),
+        401: OpenApiResponse(
+            description="Usuário não autenticado"
+        ),
+        404: OpenApiResponse(
+            description="Recurso não encontrado"
+        ),
+    }
+)
 class PricingListView(generics.ListAPIView):
     queryset = Pricing.objects.all()
     serializer_class = PricingSerializer
     permission_classes = [IsAuthenticated]
 
 
+@extend_schema(
+    summary="Selecionar plano",
+    description="Associa um plano ao usuário autenticado.",
+    tags=["Pricing"],
+    responses={
+        201: OpenApiResponse(
+            response=PricingSelectSerializer,
+            description="Recurso criado com sucesso"
+        ),
+        400: OpenApiResponse(
+            description="Dados inválidos enviados na requisição"
+        ),
+        401: OpenApiResponse(
+            description="Usuário não autenticado"
+        ),
+    }
+)
 class PricingSelectView(generics.GenericAPIView):
     serializer_class = PricingSelectSerializer
     permission_classes = [IsAuthenticated]

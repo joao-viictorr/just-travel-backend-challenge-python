@@ -75,8 +75,11 @@ TEMPLATES = [
 
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Just Travel API",
-    "DESCRIPTION": "API para o desafio técnico",
+    "TITLE": "Just Travel Backend API",
+    "DESCRIPTION": (
+        "API REST desenvolvida em Django REST Framework para o desafio técnico Just Travel. "
+        "Inclui autenticação JWT, gerenciamento de projetos e simulação de planos de assinatura."
+    ),
     "VERSION": "1.0.0",
 }
 
