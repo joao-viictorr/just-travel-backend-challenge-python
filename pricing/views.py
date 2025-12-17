@@ -30,13 +30,16 @@ class PricingListView(generics.ListAPIView):
     serializer_class = PricingSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return Pricing.objects.filter(is_active=True)[:3]
+
 
 @extend_schema(
     summary="Selecionar plano",
     description="Associa um plano ao usuário autenticado.",
     tags=["Pricing"],
     responses={
-        201: OpenApiResponse(
+        200: OpenApiResponse(
             response=PricingSelectSerializer,
             description="Recurso criado com sucesso"
         ),

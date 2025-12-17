@@ -38,7 +38,10 @@ class RegisterView(generics.CreateAPIView):
     tags=["Auth"],
     request=TokenObtainPairSerializer,
     responses={
-        200: OpenApiResponse(description="Login realizado com sucesso"),
+        200: OpenApiResponse(
+            response=TokenObtainPairSerializer,
+            description="Login realizado com sucesso"
+        ),
         401: OpenApiResponse(description="Credenciais inválidas"),
     }
 )
@@ -51,7 +54,10 @@ class LoginView(TokenObtainPairView):
     tags=["Auth"],
     request=TokenRefreshSerializer,
     responses={
-        200: OpenApiResponse(description="Token atualizado com sucesso"),
+        200: OpenApiResponse(
+            response=TokenRefreshSerializer,
+            description="Token atualizado com sucesso"
+        ),
         401: OpenApiResponse(description="Refresh token inválido ou expirado"),
     }
 )

@@ -12,6 +12,6 @@ class PricingSelectSerializer(serializers.Serializer):
     pricing_id = serializers.IntegerField()
 
     def validate_pricing_id(self, value):
-        if not Pricing.objects.filter(id=value).exists():
+        if not Pricing.objects.filter(id=value, is_active=True).exists():
             raise serializers.ValidationError("Plano inválido.")
         return value

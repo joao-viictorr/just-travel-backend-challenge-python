@@ -8,7 +8,7 @@ class Pricing(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class meta:
+    class Meta:
         db_table = "pricing"
 
     def __str__(self):
@@ -18,7 +18,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     pricing = models.ForeignKey(Pricing, on_delete=models.SET_NULL, null=True, blank=True)
 
-    class meta:
+    class Meta:
         db_table = "user_profile"
 
     def __str__(self):
