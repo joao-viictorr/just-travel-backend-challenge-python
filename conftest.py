@@ -5,6 +5,7 @@ from projects.models import Project
 from pricing.models import Pricing
 from rest_framework.test import APIClient
 
+from model_bakery import baker
 
 @pytest.fixture
 def create_user_fixture():
@@ -16,12 +17,15 @@ def create_user_fixture():
 
 @pytest.fixture
 def auth_client_fixture(create_user_fixture):
+    create_user_fixture.set_password("123456")
+    create_user_fixture.save()
+
     client = APIClient()
 
     response = client.post(
         "/api/auth/login/",
         {
-            "username": "pedro",
+            "username": create_user_fixture.username,
             "password": "123456"
         },
         format="json"
@@ -32,46 +36,23 @@ def auth_client_fixture(create_user_fixture):
 
     return client
 
+
 @pytest.fixture
 def project_fixture(create_user_fixture):
-    return Project.objects.create(
-        title="Projeto Teste",
-        description="Descrição do projeto",
-        user=create_user_fixture
-    )
+    return baker.make(Project, user=create_user_fixture)
 
 
 @pytest.fixture
-def other_user_project():
-    from django.contrib.auth.models import User
-
-    user = User.objects.create_user(
-        username="outro_user",
-        password="123456"
-    )
-
-    return Project.objects.create(
-        title="Projeto de outro usuário",
-        description="Não deveria aparecer",
-        user=user
-    )
+def other_user_project_fixture():
+    other_user = baker.make(User)
+    return baker.make(Project, user=other_user)
 
 
 @pytest.fixture
-def pricing_fixture(db):
-    return Pricing.objects.create(
-        plan_name="Plano Básico",
-        description="Plano teste",
-        price=99.90,
-        is_active=True
-    )
+def pricing_active_fixture():
+    return baker.make(Pricing, is_active=True)
 
 
 @pytest.fixture
-def pricing_inactive_fixture(db):
-    return Pricing.objects.create(
-        plan_name="Plano Inativo",
-        description="Plano inativo",
-        price=199.90,
-        is_active=False
-    )
+def pricing_inactive_fixture():
+    return baker.make(Pricing, is_active=False)

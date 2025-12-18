@@ -11,12 +11,14 @@ def test_projects_sem_token_retorna_401():
 
 
 @pytest.mark.django_db
-def test_listar_apenas_projetos_do_usuario(auth_client_fixture, project_fixture, other_user_project):
+def test_listar_apenas_projetos_do_usuario(auth_client_fixture, project_fixture, other_user_project_fixture):
     response = auth_client_fixture.get("/api/projects/")
 
     assert response.status_code == 200
     assert len(response.data) == 1
-    assert response.data[0]["title"] == "Projeto Teste"
+
+    project = response.data[0]
+    assert project["id"] == project_fixture.id
 
 
 @pytest.mark.django_db
@@ -39,10 +41,10 @@ def test_criar_projeto_com_usuario_autenticado(auth_client_fixture):
 @pytest.mark.django_db
 def test_nao_acessar_projeto_de_outro_usuario(
     auth_client_fixture,
-    other_user_project
+    other_user_project_fixture
 ):
     response = auth_client_fixture.get(
-        f"/api/projects/{other_user_project.id}/"
+        f"/api/projects/{other_user_project_fixture.id}/"
     )
 
     assert response.status_code in (403, 404)
