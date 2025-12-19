@@ -69,6 +69,7 @@ O endpoint ```api/auth/refresh/```, embora não exigido explicitamente no desafi
 Os testes automatizados utilizam pytest, pytest-django e model-bakery, garantindo que futuras expansões do modelo de dados não quebrem os testes existentes. A cobertura de 98% de todo código, reforça a confiabilidade e segurança na evolução do código.
 
 Os projetos são sempre filtrados pelo usuário autenticado. Já o módulo pricing é global, pois os planos devem estar disponíveis independentemente do usuário. Para relacionar usuários a planos, foi criado o modelo UserProfile, que é automaticamente instanciado no registro do usuário e atualizado quando um plano é selecionado.
+
 A validação dos dados de entrada é feita prioritariamente nos serializers, mantendo as views mais limpas e seguindo as boas práticas do DRF.
 
 A validação de dados é realizada prioritariamente nos serializers, mantendo as views mais simples e alinhadas às boas práticas do Django REST Framework.
