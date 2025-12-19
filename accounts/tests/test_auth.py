@@ -11,7 +11,7 @@ def test_login_com_credenciais_validas(create_user_fixture):
     client = APIClient()
 
     payload = {
-        "username": "pedro",
+        "username": create_user_fixture.username,
         "password": "123456"
     }
 

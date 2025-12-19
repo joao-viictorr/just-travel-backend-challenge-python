@@ -56,35 +56,30 @@ A documentação interativa está disponível via Swagger em:
 
 ## 🧠 Decisões Técnicas
 
-Python 3.14 foi escolhido por ser uma das versões mais recentes do python e estável para o desenvolvimento de projetos com django, como a ideia é simular um sistema backend de api, eu achei interessante usar essa versão por ser estável e devido que as tecnologias se atualizam constantamente e está alinhado com as novas versões é de suma importância em projetos.
+Python 3.14 foi escolhido para o desenvolvimento local por ser uma das versões mais recentes da linguagem, permitindo acompanhar a evolução do ecossistema Python. A utilização dessa versão se reflete na preocupação em manter o projeto alinhado com as tecnologias mais recentes.
 
-Django 5.2 foi utilizado devido a ser uma versão mais matura, embora, exista a nova versão 6.0, optei por utilizar essa versão pois grande partes das bibliotecas funcionam sem apresentar possíveis erros de compatibilidade entre elas ou com a própria versão do python, além de ser uma versão que tenho mais afinidade.
+Django 5.2 foi adotado por ser uma versão estável e madura do framework. Embora já exista a versão 6.0, optou-se pela 5.2 devido à maior compatibilidade com bibliotecas amplamente utilizadas no ecossistema Django, além de ser uma versão com a qual possuo maior familiaridade.
 
-PostgreSQL 16, a escolha que tomei do banco de dados está relacionada a integridade, maturidade e robustez do PostgreSQL além de ser um banco que tenho maior afinidade. A versão eu escolhi a 16 por ser uma das mais recentes e novamente para evitar possíveis erros de compatibilidade com algumas bibliotecas do django, embora a gente atualmente esteja na versão 18.
+PostgreSQL 16, foi escolhido pela sua robustez, integridade transacional e maturidade, A decisão pela versão 16 visa equilibrar atualização tecnológica e estabilidade, evitando possíveis problemas de compatibilidade com bibliotecas do Django.
 
-A biblioteca generics foi escolhida devido a facilidade e praticidade na hora de criar endpoints na api, por isso em grande parte do projeto tentei ao máximo manter como o padrão ela nas views, ajustando os métodos conforme a necessidade do projeto.
+As views genéricas (generics) do Django REST Framework foram utilizadas para acelerar o desenvolvimento e reduzir código repetitivo, mantendo os endpoints claros e padronizados, com personalizações apenas quando necessário.
 
-O endpoint api/auth/refresh/ embora não esteja ímplicito no desafio, eu achei interessante criar pois isso permitir eu gerar um novo token de acesso(vida curta), no meu projeto sem a necessidade de ter que a todo momento está realizando o login, e passando o token de refresh que tem a vida útil no nosso projeto de 1 dia, podendo ser extendida, conforme a necessidade, eu criei esse endpoint mais como uma boa prática para o frontend consumir posteriomente.
+O endpoint ```api/auth/refresh/```, embora não exigido explicitamente no desafio, foi implementado como boa prática. Ele permite a renovação do token de acesso sem a necessidade de um novo login constante, utilizando um token de refresh com validade maior.
 
-Os testes automatizados foram utilizados com o pytest, 
+Os testes automatizados utilizam pytest, pytest-django e model-bakery, garantindo que futuras expansões do modelo de dados não quebrem os testes existentes. A cobertura de 98% de todo código, reforça a confiabilidade e segurança na evolução do código.
 
-Django + Django REST Framework foram escolhidos pela maturidade, robustez e forte adoção no mercado para construção de APIs REST escaláveis.
+Os projetos são sempre filtrados pelo usuário autenticado. Já o módulo pricing é global, pois os planos devem estar disponíveis independentemente do usuário. Para relacionar usuários a planos, foi criado o modelo UserProfile, que é automaticamente instanciado no registro do usuário e atualizado quando um plano é selecionado.
+A validação dos dados de entrada é feita prioritariamente nos serializers, mantendo as views mais limpas e seguindo as boas práticas do DRF.
 
-A arquitetura foi organizada por apps independentes (accounts, projects, pricing), promovendo separação de responsabilidades e facilitando manutenção e evolução do código.
+A validação de dados é realizada prioritariamente nos serializers, mantendo as views mais simples e alinhadas às boas práticas do Django REST Framework.
 
-A autenticação foi implementada com JWT (SimpleJWT), permitindo uma API stateless, compatível com aplicações frontend modernas.
+A arquitetura foi organizada por apps independentes (accounts, projects, pricing), para separação das responsabilidades de cada um e também com a ideia de separação dos módulos, facilitando a manutenção e a expansão dos projeto posteriomente.
 
-O PostgreSQL foi utilizado como banco de dados relacional devido à necessidade de integridade e relacionamento entre entidades.
+A documentação da API é gerada automaticamente via Swagger/OpenAPI, com descrições detalhadas dos endpoints para facilitar o consumo por aplicações frontend.
 
-Os dados de projetos são sempre filtrados pelo usuário autenticado, garantindo segurança e evitando acesso indevido a recursos de terceiros.
+No ambiente Docker, foi utilizado Python 3.12-slim, por ser uma versão estável e amplamente suportada em produção. Essa escolha garante maior compatibilidade com bibliotecas e não impacta o funcionamento da aplicação em relação ao ambiente local.
 
-A validação de dados de entrada é feita prioritariamente nos serializers, mantendo as views mais limpas e seguindo boas práticas do DRF.
-
-O endpoint de seleção de plano (POST /api/pricing/select/) recebe o identificador do plano no corpo da requisição, respeitando a semântica REST e facilitando extensões futuras.
-
-O projeto conta com testes automatizados utilizando Pytest, alcançando aproximadamente 98% de cobertura, garantindo confiabilidade e segurança na evolução do código.
-
-A documentação da API é gerada automaticamente via Swagger/OpenAPI, permitindo fácil exploração e consumo dos endpoints.
+As variáveis de ambiente foram padronizadas com o prefixo POSTGRES_, assegurando compatibilidade com a imagem oficial do PostgreSQL e facilitando a integração com o Docker Compose. A aplicação Django se conecta ao banco utilizando o nome do serviço Docker como host.
 
 ---
 
@@ -116,6 +111,29 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
+---
+
+## ▶️ Como Executar o Projeto (com Docker)
+
+1. Criar o arquivo .env com as variáveis necessárias
+
+2. Subir os containers
+
+```
+docker-compose up --build
+```
+
+3. Executar as migrations
+
+```
+docker-compose exec api python manage.py migrate
+```
+
+4. A aplicação ficará disponível em:
+
+```
+http://localhost:8000
+```
 
 ---
 
@@ -123,9 +141,11 @@ python manage.py runserver
 
 Este projeto foi desenvolvido com foco em:
 
-* Clareza de código
+* Clareza nas estruturas
 * Boas práticas em APIs REST
 * Testabilidade
 * Organização e legibilidade
+
+Este projeto não contempla versionamento de API ou controle de permissões avançadas por escopo, porém tem como margem uma possível expansão futura.
 
 O objetivo principal é demonstrar domínio prático de **Django + DRF** em um contexto realista de backend.

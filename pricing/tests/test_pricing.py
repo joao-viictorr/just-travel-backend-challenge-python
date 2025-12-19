@@ -4,6 +4,9 @@ from rest_framework.test import APIClient
 
 @pytest.mark.django_db
 def test_listar_planos(auth_client_fixture, pricing_active_fixture):
+    """
+    Garante que a listagem de planos está acessível e retornando dados.
+    """
     response = auth_client_fixture.get("/api/pricing/")
 
     assert response.status_code == 200
@@ -16,6 +19,10 @@ def test_selecionar_plano(
     pricing_active_fixture,
     create_user_fixture
 ):
+    """
+    Testa a lógica de negócio de contratação de plano.
+    Verifica se, após o POST, o perfil do usuário foi atualizado no banco.
+    """
     payload = {"pricing_id": pricing_active_fixture.id}
 
     response = auth_client_fixture.post(
@@ -33,6 +40,10 @@ def test_selecionar_plano(
 
 @pytest.mark.django_db
 def test_selecionar_plano_inexistente(auth_client_fixture):
+    """
+    Testa o tratamento de erro ao tentar contratar um plano que não existe ou de outro usuário.
+    Espera-se um Bad Request (400).
+    """
     payload = {"pricing_id": 999}
 
     response = auth_client_fixture.post(
